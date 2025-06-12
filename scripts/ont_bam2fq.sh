@@ -1,0 +1,20 @@
+#!/bin/bash
+
+OUTDIR=$1
+
+shift
+
+mkdir -p $OUTDIR
+
+echo "Making: $OUTDIR"
+
+BAMS=$@
+# BAMS=$2
+
+
+
+
+for f in $BAMS; do
+    file=$(basename $f)
+    samtools fastq --threads 20 -f 4 -0 $OUTDIR/${file/.bam/.fastq.gz} $f ;
+done
