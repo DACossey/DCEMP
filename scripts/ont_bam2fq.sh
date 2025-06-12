@@ -14,6 +14,7 @@ BAMS=$@
 
 
 
+
 for f in $BAMS; do
     file=$(basename $f)
     samtools fastq --threads 20 -f 4 -0 $OUTDIR/${file/.bam/.fastq.gz} $f ;
