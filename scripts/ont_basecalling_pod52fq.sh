@@ -11,7 +11,7 @@ while getopts ":hm:g:k:c:" opt; do
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
        echo "Usage: "
-       echo "    `basename $0` [options: [-t] [-g] [-k]] <prefix> <reads.fastq>"
+       echo "    `basename $0` [options: [-t] [-g] [-k]] <prefix> <your_pod5_directory>"
        echo "Options: "
        echo "    -t  -  Specify the number of threads for demultiplexing reads [20]"
        echo "    -g  -  Specifiy basecalling model [Default: sup, hac, fast]"
@@ -61,22 +61,13 @@ echo "Max cores: $THREADS"
 # BASECALLING
 echo "Running basecalling..."
 echo "${PREFIX}_dorado"
-mkdir -p "${FASTQ_OUTDIR}"
-dorado basecaller "${MODEL}" "${POD5}" --no-trim --kit-name "${KIT_NAME}" > "${BASECALLS_DIR}/${PREFIX}_calls.bam"echo "Running dorado basecall finished successfully."
+dorado basecaller "${MODEL}" "${POD5}" --no-trim --kit-name "${KIT_NAME}" > "${BASECALLS_DIR}/${PREFIX}_calls.bam"
 echo "Basecalling finished successfully, your basecalled BAM file is now in ${BASECALLS_DIR}/${PREFIX}_calls.bam."
 
 # DEMULTIPLEXING
 echo "Running demultiplexing"
 dorado demux -t "${THREADS}" --output-dir "$DEMUX_DIR" --kit-name "${KIT_NAME}" "${BASECALLS_DIR}/${PREFIX}_calls.bam"
-
-
-echo "Running dorado demux finished successfully."
-
-
-# Convert BAM to FASTQ
-FASTQ_OUTDIR="${PREFIX}/fastq/"
-mkdir -p "$FASTQ_OUTDIR"
-echo "Making: $FASTQ_OUTDIR"
+echo "Dorado demux finished successfully, your demultiplexed BAM files are now in $DEMUX_DIR."
 
 #Finding BAM files in the demux directory
 BAMS=("$DEMUX_DIR"/*.bam)
