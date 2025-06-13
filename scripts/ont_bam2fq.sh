@@ -9,11 +9,6 @@ mkdir -p $OUTDIR
 echo "Making: $OUTDIR"
 
 BAMS=$@
-# BAMS=$2
-
-
-
-
 
 for f in $BAMS; do
     file=$(basename $f)
