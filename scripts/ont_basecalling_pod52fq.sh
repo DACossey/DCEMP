@@ -96,3 +96,4 @@ done
 
 
 echo "BAM to FASTQ conversion finished successfully, your FASTQ files are now in $FASTQ_OUTDIR."
+echo "Lewis's test change"
