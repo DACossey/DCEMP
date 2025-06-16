@@ -20,14 +20,13 @@ INPUT_DIR="input"
 OUTDIR="TRIMMED_FASTQ" #will change if specified with -o
 OUTDIR_REPORTS="QC_reports"
 
-mkdir -p "$OUTDIR" "$OUTDIR_REPORTS"
 
-while getopts ":i:o:s:e:5:3:M:u:l" opt; do
+while getopts "h:i:o:s:e:5:3:M:u:l" opt; do
   case "${opt}" in
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
        echo "Usage: "
-       echo "    `basename $0` [options: [-i] [-o] [-s] [-e] [-5] [-3] [-M] [-u] [-l]] <prefix> <your_fastq_directory>"
+       echo "    `basename $0` [options: [-i] [-o] [-s] [-e] [-5] [-3] [-M] [-u] [-l]]"
        echo "Options: "
        echo "    -i  -  Specify input directory [Default: ./input]"
        echo "    -o  -  Specify output directory [Default: ./output]"
@@ -59,6 +58,8 @@ done
 
 
 shift $((OPTIND -1))
+
+mkdir -p "$OUTDIR" "$OUTDIR_REPORTS"
 
 #Finding fastq files in the FASTQdirectory
 FASTQS=("$INPUT_DIR"/*.fastq.gz)
