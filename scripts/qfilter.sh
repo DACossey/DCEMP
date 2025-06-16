@@ -4,7 +4,7 @@
 echo "Fastplong is a wrapper for fastp to trim Nanopore reads."
 echo "Please make sure you are analysing long reads; otherwise, use fastp directly."
 echo "Default flags have been set, but you can change them according to https://github.com/OpenGene/fastplong?tab=readme-ov-file#quality-filter"
-echo "You can also run fastplong -h for more information."
+echo "You can also run fastp -h for more information."
 
 
 # Set default options for flags (will be overwritten if specified)
@@ -26,7 +26,7 @@ while getopts "h:i:o:s:e:5:3:M:u:l" opt; do
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
        echo "Usage: "
-       echo "    `basename $0` [options: [-i] [-o] [-s] [-e] [-5] [-3] [-M] [-u] [-l]]"
+       echo "    `basename $0` [options: [-h] [-i] [-o] [-s] [-e] [-5] [-3] [-M] [-u] [-l]]"
        echo "Options: "
        echo "    -i  -  Specify input directory [Default: ./input]"
        echo "    -o  -  Specify output directory [Default: ./output]"
