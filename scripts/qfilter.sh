@@ -21,16 +21,17 @@ while getopts ":hm:o:s:e:5:3:M:u:l" opt; do
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
        echo "Usage: "
-       echo "    `basename $0` [options: <fastq.gz files directory> [-o] [-s] [-e] [-5] [-3] [-M] [-u] [-l]]"
+       echo "    `basename $0` [options: <fastq.gz files directory> [-o] [-s] [-e] [-5] [-3] [-M] [-q] [-u] [-l]]"
        echo "Options: "
        echo "    -o  -  Specify output directory [Default: ./output]"
        echo "    -s  -  Specify start adapter sequence (5' to 3') for trimming [Default: TTTCTGTTGGTGCTGATATTGC]"
        echo "    -e  -  Specify end adapter sequence (5' to 3') for trimming [Default: ACTTGCCTGTCGCTCTATCTTC]"
        echo "    -5  -  Enable 5' adapter trimming cut front; move a sliding window from front (5') to tail, drop the bases in the window if its mean quality < threshold, stop otherwise."
        echo "    -3  -  Enable 3' adapter trimming cut tail; move a sliding window from front (3') to tail, drop the bases in the window if its mean quality < threshold, stop otherwise."
-       echo "    -M  -  Cut mean quality requirement option shared by cut_front, cut_tail or cut_sliding. Range: 1~36 [Default: 20 (Q20)])"
-       echo "    -u  -  Unqualified percent limit; how many percents of bases are allowed to be unqualified (0~100) [Default 40 means 40%]"
-       echo "    -l  -  Specify minimum length for reads [Default for this pipeline: 50]"
+       echo "    -M  -  Cut mean quality requirement option shared by cut_front, cut_tail or cut_sliding. Range: 1~36 [Default: 20 (Q20)]. (int [=20]))"
+       echo "    -q, -  Qualified quality phred; the quality value that a base is qualified. Default 15 means phred quality >=Q15 is qualified. (int [=15])"
+       echo "    -u  -  Unqualified percent limit; how many percents of bases are allowed to be unqualified (0~100) [Default 40 means 40%. (int [=40])]"
+       echo "    -l  -  Specify minimum length for reads [Default for this pipeline: 50. (int [=50])]"
        echo ""
        exit 0
       ;;
@@ -40,6 +41,7 @@ while getopts ":hm:o:s:e:5:3:M:u:l" opt; do
     5) TRIM_5=true ;;
     3) TRIM_3=true ;;
     M) MEAN_QUALITY="${OPTARG}" ;;
+    q) QUALIFIED_QUALITY="${OPTARG}" ;;
     u) UNQUALIFIED_PERCENT="${OPTARG}" ;;
     l) MIN_LENGTH="${OPTARG}" ;;
     \?)echo "Invalid Option: -$OPTARG" 1>&2
@@ -81,6 +83,11 @@ for fq in "${FASTQS[@]}"; do
     # Add mean quality if specified
     if [ -n "$MEAN_QUALITY" ]; then
       CMD+=(-M "$MEAN_QUALITY")
+    fi
+    
+    # Add qualified quality if specified
+    if [ -n "$QUALIFIED_QUALITY" ]; then
+      CMD+=(-q "$QUALIFIED_QUALITY")
     fi
 
     # Add unqualified percent if specified
