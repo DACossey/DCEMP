@@ -10,8 +10,8 @@ echo "You can also run fastp -h for more information."
 # Set default options for flags (will be overwritten if specified)
 START_ADAPTER="TTTCTGTTGGTGCTGATATTGC"
 END_ADAPTER="ACTTGCCTGTCGCTCTATCTTC"
-TRIM_5=true
-TRIM_3=true
+TRIM_5="true"
+TRIM_3="true"
 # Directories
 OUTDIR="TRIMMED_FASTQ" #will change if specified with -o
 OUTDIR_REPORTS="QC_reports"
