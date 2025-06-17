@@ -21,7 +21,7 @@ while getopts ":hm:o:s:e:5:3:M:q:u:l" opt; do
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
        echo "Usage: "
-       echo "    `basename $0` [options: <fastq.gz files directory> [-o] [-s] [-e] [-5] [-3] [-M] [-q] [-u] [-l]]"
+       echo "    `basename $0` [options: [-o] [-s] [-e] [-5] [-3] [-M] [-q] [-u] [-l] <fastq.gz files directory> ]"
        echo "Options: "
        echo "    -o  -  Specify output directory [Default: ./output]"
        echo "    -s  -  Specify start adapter sequence (5' to 3') for trimming [Default: TTTCTGTTGGTGCTGATATTGC]"
@@ -102,9 +102,9 @@ for fq in "${FASTQS[@]}"; do
     else
       CMD+=(-l 50)
     fi
-      
+   echo "Running Quality filtering with command: ${CMD[@]}"   
   "${CMD[@]}"  
-
+  echo "Quality filtering complete."
 done
 
 echo "Quality filtering complete.\
