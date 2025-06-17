@@ -4,7 +4,8 @@
 echo "Fastplong is a wrapper for fastp to trim Nanopore reads."
 echo "Please make sure you are analysing long reads; otherwise, use fastp directly."
 echo "Default flags have been set, but you can change them according to https://github.com/OpenGene/fastplong?tab=readme-ov-file#quality-filter"
-echo "You can also run fastp -h for more information."
+echo "You can also run fastplong -h for more information."
+echo "Remember to put flags before the input directory."
 
 
 # Set default options for flags (will be overwritten if specified)
@@ -12,7 +13,8 @@ START_ADAPTER="TTTCTGTTGGTGCTGATATTGC"
 END_ADAPTER="ACTTGCCTGTCGCTCTATCTTC"
 TRIM_5=false
 TRIM_3=false
-# Directories
+
+# Output directories
 OUTDIR="TRIMMED_FASTQ" #will change if specified with -o
 OUTDIR_REPORTS="QC_reports"
 
@@ -27,10 +29,10 @@ while getopts ":ho:s:e:53M:q:u:l:" opt; do
        echo "    -o  -  Specify output directory [Default: ./output]"
        echo "    -s  -  Specify start adapter sequence (5' to 3') for trimming [Default: TTTCTGTTGGTGCTGATATTGC]"
        echo "    -e  -  Specify end adapter sequence (5' to 3') for trimming [Default: ACTTGCCTGTCGCTCTATCTTC]"
-       echo "    -5  -  Enable 5' adapter trimming cut front; move a sliding window from front (5') to tail, drop the bases in the window if its mean quality < threshold, stop otherwise."
-       echo "    -3  -  Enable 3' adapter trimming cut tail; move a sliding window from front (3') to tail, drop the bases in the window if its mean quality < threshold, stop otherwise."
+       echo "    -5  -  Enable 5' adapter trimming cut front; move a sliding window from front (5') to tail, drop the bases in the window if its mean quality < threshold, stop otherwise. [Default is disabled, enable by adding -5]"
+       echo "    -3  -  Enable 3' adapter trimming cut tail; move a sliding window from front (3') to tail, drop the bases in the window if its mean quality < threshold, stop otherwise. [Default is disabled, enable by adding -3]"
        echo "    -M  -  Cut mean quality requirement option shared by cut_front, cut_tail or cut_sliding. Range: 1~36 [Default: 20 (Q20)]. (int [=20]))"
-       echo "    -q, -  Qualified quality phred; the quality value that a base is qualified. Default 15 means phred quality >=Q15 is qualified. (int [=15])"
+       echo "    -q -  Qualified quality phred; the quality value that a base is qualified. Default 15 means phred quality >=Q15 is qualified. (int [=15])"
        echo "    -u  -  Unqualified percent limit; how many percents of bases are allowed to be unqualified (0~100) [Default 40 means 40%. (int [=40])]"
        echo "    -l  -  Specify minimum length for reads [Default for this pipeline: 50. (int [=50])]"
        echo ""
