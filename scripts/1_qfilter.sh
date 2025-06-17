@@ -22,7 +22,7 @@ OUTDIR_REPORTS="QC_reports"
 while getopts ":ho:s:e:53M:q:u:l:" opt; do
   case "${opt}" in
     h) echo ""
-       echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
+       echo "Uses fastplong to quality control long read sequencing fastq files. Allows manipulation of adapter trimming, start and end trimming, read quality filtering, and read length filtering. "
        echo "Usage: "
        echo "    `basename $0` [options: [-o] [-s] [-e] [-5] [-3] [-M] [-q] [-u] [-l] <fastq.gz files directory> ]"
        echo "Options: "
