@@ -17,7 +17,7 @@ OUTDIR="TRIMMED_FASTQ" #will change if specified with -o
 OUTDIR_REPORTS="QC_reports"
 
 
-while getopts ":ho:s:e:53M:q:u:l" opt; do
+while getopts ":ho:s:e:53M:q:u:l:" opt; do
   case "${opt}" in
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
