@@ -10,7 +10,8 @@ echo "You can also run fastp -h for more information."
 # Set default options for flags (will be overwritten if specified)
 START_ADAPTER="TTTCTGTTGGTGCTGATATTGC"
 END_ADAPTER="ACTTGCCTGTCGCTCTATCTTC"
-
+TRIM_5=true
+TRIM_3=true
 # Directories
 OUTDIR="TRIMMED_FASTQ" #will change if specified with -o
 OUTDIR_REPORTS="QC_reports"
@@ -38,8 +39,8 @@ while getopts ":hm:o:s:e:5:3:M:q:u:l" opt; do
     o) OUTDIR="${OPTARG}" ;;
     s) START_ADAPTER="${OPTARG}" ;;
     e) END_ADAPTER="${OPTARG}" ;;
-    5) TRIM_5=true ;;
-    3) TRIM_3=true ;;
+    5) TRIM_5= "${OPTARG}";;
+    3) TRIM_3="${OPTARG}" ;;
     M) MEAN_QUALITY="${OPTARG}" ;;
     q) QUALIFIED_QUALITY="${OPTARG}" ;;
     u) UNQUALIFIED_PERCENT="${OPTARG}" ;;
