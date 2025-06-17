@@ -9,7 +9,7 @@ KIT_NAME=SQK-NBD114-96
 while getopts ":hm:g:k:c:" opt; do
   case "${opt}" in
     h) echo ""
-       echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
+       echo "Wrapper for Dorado to basecall Nanopore pod5 files and samtools to convert pod5 to fastq files."
        echo "Usage: "
        echo "    `basename $0` [options: [-t] [-g] [-k]] <prefix> <your_pod5_directory>"
        echo "Options: "
