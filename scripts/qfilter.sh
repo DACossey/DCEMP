@@ -16,7 +16,7 @@ OUTDIR="TRIMMED_FASTQ" #will change if specified with -o
 OUTDIR_REPORTS="QC_reports"
 
 
-while getopts ":hm:o:s:e:5:3:M:u:l" opt; do
+while getopts ":hm:o:s:e:5:3:M:q:u:l" opt; do
   case "${opt}" in
     h) echo ""
        echo "Wrapper for Dorado to Basecall Nanopore pod5 files."
@@ -53,8 +53,8 @@ done
 
 shift $((OPTIND -1))
 
-mkdir -p "$OUTDIR" "$OUTDIR_REPORTS"
 INPUT_DIR=$1
+mkdir -p "$OUTDIR" "$OUTDIR_REPORTS"
 
 #Finding fastq files in the FASTQ directory
 FASTQS=("$INPUT_DIR"/*.fastq.gz)
@@ -84,7 +84,7 @@ for fq in "${FASTQS[@]}"; do
     if [ -n "$MEAN_QUALITY" ]; then
       CMD+=(-M "$MEAN_QUALITY")
     fi
-    
+
     # Add qualified quality if specified
     if [ -n "$QUALIFIED_QUALITY" ]; then
       CMD+=(-q "$QUALIFIED_QUALITY")
