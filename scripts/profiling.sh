@@ -50,7 +50,7 @@ mkdir -p "$OUTDIR"
 
 #Finding fastq files in the FASTQ directory
 READS=()
-for fq in "$INPUT_DIR"/*.fastq "$INPUT_DIR"/*.fastq.gz; do
+for fq in "$INPUT_DIR"/*.fastq; do
   [ -e "$fq" ] && READS+=("$fq")
   
 done
@@ -62,39 +62,49 @@ fi
 
 #PROFILE AGAINST DATABASE and ESTIMATE UNKNOWN READS
 for fq in "${READS[@]}"; do
- base=$(basename "$fq")
-    if [[ "$base" == *.fastq.gz ]]; then
-        base="${base%.fastq.gz}"
-    else
-        base="${base%.fastq}"
-    fi
-  CMD=(sylph profile \
+ base=$(basename "$fq" .fastq)
+  echo "Profiling $base against database $DATABASE..."
+
+  # Check if the database file exists
+  if [ ! -f "$DATABASE" ]; then
+    echo "Error: Database file $DATABASE not found."
+    exit 1
+  fi
+
+  # Check if the metadata file exists
+  if [ ! -f "$METADATA" ]; then
+    echo "Error: Metadata file $METADATA not found."
+    exit 1
+  fi
+
+  # Create command array for profiling
+ CMD=(
+    sylph profile \
     "$DATABASE" \
     "$fq" \
     -o "$OUTDIR/${base}_results.tsv"
   )
     # Only add -u if specified
-    if [ "$UNKNOWN_PROFILES" = true ]; then
-      CMD+=(-u)
-    fi
+ if [ "$UNKNOWN_PROFILES" = true ]; then
+     CMD+=(-u)
+ fi
 
-   echo "Running Profiling with command: ${CMD[@]}"
-   "${CMD[@]}"
-   echo "Profiling completed for $base, results are saved in $OUTDIR/${base}_results.tsv."
+ echo "Running Profiling with command: ${CMD[@]}"
+ "${CMD[@]}"
+ echo "Profiling completed for $base, results are saved in $OUTDIR/${base}_results.tsv."
 
-  echo "Integrating taxonomy for $base..."
-  sylph-tax taxprof "$OUTDIR/${base}_results.tsv" -o "$OUTDIR/" -t "$METADATA"
-  echo "Taxonomy integration completed for $base, results are saved in $OUTDIR."
+ echo "Integrating taxonomy for $base..."
+ sylph-tax taxprof "$OUTDIR/${base}_results.tsv" -o "$OUTDIR/" -t "$METADATA"
+ orig="$OUTDIR/${base}.fastq.sylphmpa"
+ new="$OUTDIR/${base}.sylphmpa"
+ if [ -f "$orig" ]; then
+    mv "$orig" "$new"
+ else
+    echo "Warning: Expected $orig not found!"
+ fi
 
-done
+ echo "Taxonomy integration completed for $new, results are saved in $OUTDIR."
 
-# removing the "fastq or fastq.gz" from the file names prefix/base
-TAXFILES=("$OUTDIR"/*.sylphmpa)
-for file in "${TAXFILES[@]}"; do
-  base=$(basename "$file")
-  clean_name="${base/.fastq.gz.sylphmpa/.sylphmpa}"
-  clean_name="${clean_name/.fastq.sylphmpa/.sylphmpa}"
-  echo "Cleaned name: $clean_name"
 done
 
 # Merge multiple taxonomic profiles based on relative abundance
