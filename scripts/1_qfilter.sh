@@ -24,7 +24,7 @@ while getopts ":ho:s:e:53M:q:u:l:" opt; do
     h) echo ""
        echo "Uses fastplong to quality control long read sequencing fastq files. Allows manipulation of adapter trimming, start and end trimming, read quality filtering, and read length filtering. "
        echo "Usage: "
-       echo "    `basename $0` [options: [-o] [-s] [-e] [-5] [-3] [-M] [-q] [-u] [-l] <fastq.gz files directory> ]"
+       echo "    `basename $0` [options: [-o] [-s] [-e] [-5] [-3] [-M] [-q] [-u] [-l] <.fastq files directory> ]"
        echo "Options: "
        echo "    -o  -  Specify output directory [Default: ./output]"
        echo "    -s  -  Specify start adapter sequence (5' to 3') for trimming [Default: TTTCTGTTGGTGCTGATATTGC]"
@@ -60,14 +60,14 @@ INPUT_DIR=$1
 mkdir -p "$OUTDIR" "$OUTDIR_REPORTS"
 
 #Finding fastq files in the FASTQ directory
-FASTQS=("$INPUT_DIR"/*.fastq.gz)
+FASTQS=("$INPUT_DIR"/*.fastq)
 
 echo "Filtering FASTQ files..."
 for fq in "${FASTQS[@]}"; do
-  base=$(basename "$fq" .fastq.gz)
+  base=$(basename "$fq" .fastq)
   CMD=(fastplong \
     -i "$fq" \
-    -o "$OUTDIR/${base}_trimmed.fastq.gz" \
+    -o "$OUTDIR/${base}_trimmed.fastq" \
     -s "$START_ADAPTER" \
     -e "$END_ADAPTER" \
     -h "$OUTDIR_REPORTS/${base}_fastp_report.html" \
