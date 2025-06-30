@@ -1,7 +1,7 @@
 process RUN_FASTPLONG { // Taken from some code I wrote a while ago
     // For testing purposes you can use conda later on it would be good to pull from dockerhub
     // replace with your path (conda env list)
-    conda '/miniconda/users/envs/fastplong' 
+    conda '/home/tanentzap/miniconda3/envs/qc_env' 
     publishDir "${params.outdir}/01_fastp", mode: 'copy'
 
     input:
