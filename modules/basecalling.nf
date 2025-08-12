@@ -6,29 +6,25 @@ process basecalling {
     path pod5_dir
 
     output:
-    path "${prefix}_dorado/dorado_basecalls/"
-    path "${prefix}_dorado/dorado_demux/"
+    path "demux_bams/*.bam", emit: demux_bams
 
     script:
     """
-    mkdir -p ${prefix}_dorado/dorado_basecalls/
-    mkdir -p ${prefix}_dorado/dorado_demux/
+    mkdir -p demux_bams
+    mkdir -p dorado_basecalls
 
-    # BASECALLING
-    echo "Running basecalling..."
-    dorado basecaller sup ${pod5_dir} --no-trim --kit-name SQK-NBD114-96 > ${prefix}_dorado/dorado_basecalls/${prefix}_calls.bam
+    echo "Running basecalling for sample ${prefix}..."
+    dorado basecaller sup ${pod5_dir} --no-trim --kit-name SQK-NBD114-96 \
+        > dorado_basecalls/basecalls.bam
 
-    # DEMULTIPLEXING
-    echo "Running demultiplexing"
-    dorado demux -t 20 --output-dir ${prefix}_dorado/dorado_demux/ --kit-name SQK-NBD114-96 ${prefix}_dorado/dorado_basecalls/${prefix}_calls.bam
+    echo "Running demultiplexing..."
+    dorado demux -t 20 \
+        --output-dir demux_bams/ \
+        --kit-name SQK-NBD114-96 \
+        dorado_basecalls/basecalls.bam
 
-    echo "BAM files ready and saved to: dorado_demux"
-    echo "Your next steps are converting BAM files to FASTQ and then quality filtering."
+    echo "BAM files saved to: demux_bams/"
     """
 }
 
-
-
-
-  
   
