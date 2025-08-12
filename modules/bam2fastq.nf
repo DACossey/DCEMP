@@ -1,22 +1,20 @@
 process bam2fastq { 
 
-  tag "$prefix"
+  tag "bam"
   
   input:
-  bam_file
+  path bam_files
   
   output:
-  path "$prefix"/fastq_files
+  path "fastq_files/*.fastq", emit: fastqs
 
   script:
   """
-  mkdir -p fastq_filesz
+  mkdir -p fastq_files
 
-  BAMS=$@
-
-  for f in $BAMS; do
-    file=$(basename $f)
-    samtools fastq --threads 20 -f 4 -0 $OUTDIR/${file/.bam/.fastq.gz} $f ;
+ for bam in ${bam_files}; do
+    base=\$(basename \$bam .bam)  # Now Bash sees $bam, not Nextflow
+    samtools fastq --threads 20 -0 fastq_files/\${base}.fastq \$bam
   done
 
   """
