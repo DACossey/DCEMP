@@ -1,9 +1,8 @@
 process basecalling {
-    tag "$prefix"
-    publishDir "results/dorado_basecalls", mode: 'copy'
+    tag "basecalling"
+    publishDir "dorado_basecalls", mode: 'copy'
 
     input:
-    val prefix
     path pod5_dir
 
     output:
@@ -12,11 +11,11 @@ process basecalling {
     script:
     """
     dorado basecaller \
-    sup \
-    ${pod5_dir} \
-    --no-trim \
-    --kit-name SQK-NBD114-96 \
-    > basecalls.bam
+        sup \
+        ${pod5_dir} \
+        --no-trim \
+        --kit-name SQK-NBD114-96 \
+        > basecalls.bam
     """
 }
 
