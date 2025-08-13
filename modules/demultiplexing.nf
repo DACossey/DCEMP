@@ -3,7 +3,7 @@ process demultiplexing {
     publishDir "demux_bams", mode: 'copy'
 
     input:
-    path basecall_bam
+    path basecalling //basecalling process output
 
     output:
     path "demux_bams/*.bam", emit: demux_bams
@@ -15,7 +15,7 @@ process demultiplexing {
     dorado demux -t 20 \
         --output-dir demux_bams \
         --kit-name SQK-NBD114-96 \
-        ${basecall_bam}
+        ${basecalling}
   
     """
 }
