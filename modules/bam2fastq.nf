@@ -1,23 +1,17 @@
-process bam2fastq { 
+process bam2fastq {
 
-  tag "bam"
-  
-  input:
-  path bam_files
-  
-  output:
-  path "fastq_files/*.fastq", emit: fastqs
+    tag { bam.getSimpleName() }
 
-  script:
-  """
-  mkdir -p fastq_files
+    input:
+    path bam
 
- for bam in ${bam_files}; do
-    base=\$(basename \$bam .bam)  # Now Bash sees $bam, not Nextflow
-    samtools fastq --threads 20 -0 fastq_files/\${base}.fastq \$bam
-  done
+    output:
+    path "fastqs/${bam.simpleName}.fastq", emit: fastqs
 
-  """
+    script:
+    """
+    mkdir -p fastqs
+    samtools fastq --threads 20 -0 fastqs/${bam.simpleName}.fastq "$bam"
 
-
+    """
 }
