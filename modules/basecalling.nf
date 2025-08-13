@@ -1,6 +1,5 @@
 process basecalling {
     tag "basecalling"
-    publishDir "dorado_basecalls", mode: 'copy'
 
     input:
     path pod5_dir
