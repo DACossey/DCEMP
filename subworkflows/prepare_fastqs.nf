@@ -31,6 +31,9 @@ workflow prepare_fastqs {
     output:
     path "*.fastq", emit: fastqs_ch
 
+    // Initialize an empty channel
+    fastqs_ch = Channel.empty()
+
     /*
     ------------------------------
         POD5 input
@@ -39,11 +42,11 @@ workflow prepare_fastqs {
     if (pod5_dir) {
         pod5_ch = Channel.fromPath(pod5_dir)
 
-        basecalling(pod5_ch)
-        demultiplexing(basecalling.out.basecalls)
-        bam2fastq(demultiplexing.out.demux_bams)
-        
-        fastqs_from_pod5 = bam2fastq.out.fastqs
+        bc_out = basecalling(pod5_ch)
+        demux_out = demultiplexing(bc_out.out.basecalls)
+        bam_out = bam2fastq(demux_out.out.demux_bams)
+
+        fastqs_ch = fastqs_ch.mix(bam_out.out.fastqs)
     }
 
     /*
@@ -53,9 +56,9 @@ workflow prepare_fastqs {
     */
     if (bam_files) {
         bam_ch = Channel.fromPath(bam_files)
-        bam2fastq(bam_ch)
+        bam_out = bam2fastq(bam_ch)
 
-        fastqs_from_bam = bam2fastq.out.fastqs
+        fastqs_ch = fastqs_ch.mix(bam_out.out.fastqs)
     }
 
     /*
@@ -64,25 +67,9 @@ workflow prepare_fastqs {
     ------------------------------
     */
     if (fastq_files) {
-        fastqs_from_fastq = Channel.fromPath(fastq_files)
+        fastq_ch = Channel.fromPath(fastq_files)
+
+        fastqs_ch = fastqs_ch.mix(fastq_ch)
     }
 
-    /*
-    ------------------------------
-        Merge all FASTQs into one channel
-    ------------------------------
-    */
-    fastqs_ch = Channel.empty()
-
-    if (pod5_dir) {
-        fastqs_ch = fastqs_ch.mix(fastqs_from_pod5)
-    }
-    if (bam_files) {
-        fastqs_ch = fastqs_ch.mix(fastqs_from_bam)
-    }
-    if (fastq_files) {
-        fastqs_ch = fastqs_ch.mix(fastqs_from_fastq)
-    }
-
-    return fastqs_ch
 }
