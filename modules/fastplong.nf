@@ -1,29 +1,32 @@
-process RUN_FASTPLONG { // Taken from some code I wrote a while ago
-    // For testing purposes you can use conda later on it would be good to pull from dockerhub
-    // replace with your path (conda env list)
-    conda '/home/tanentzap/miniconda3/envs/qc_env' 
-    publishDir "${params.outdir}/01_fastp", mode: 'copy'
+process fastplong {
+
+    tag { fastq.simpleName }
+    publishDir "${params.outdir}/fastplong", mode: 'copy'
 
     input:
-    tuple val(sample) , path(reads)
+    path fastq from fastqs_ch
 
     output:
-    val sample, emit: sample
-    path "${sample}_qc_report.fastp.html", emit: fastp_html
-    path "${sample}_qc_report.fastp.json", emit: fastp_json
-    path "${sample}_trimmed.fastq.gz", emit: fastp_fastq
+    path "*_trimmed.fastq", emit: trimmed_fastqs
+    path "*_fastp_report.html", emit: fastp_html
+    path "*_fastp_report.json", emit: fastp_json
 
     script:
     """
-    fastplong -i ${reads} \
-    -o ${sample}_trimmed.fastq.gz \
-    --cut_front \
-    --cut_tail \
-    --cut_window_size $params.window_size \
-    --cut_mean_quality $params.window_quality \
-    --json ${sample}_qc_report.fastp.json \
-    --html ${sample}_qc_report.fastp.html \
-    --thread 1 \
-    --length_required $params.min_length
+    mkdir -p TRIMMED_FASTQ QC_reports
+
+    fastplong \
+        -i ${fastq} \
+        -o TRIMMED_FASTQ/${fastq.simpleName}_trimmed.fastq \
+        -s '${params.start_adapter}' \
+        -e '${params.end_adapter}' \
+        -h QC_reports/${fastq.simpleName}_fastp_report.html \
+        -j QC_reports/${fastq.simpleName}_fastp_report.json \
+        ${params.trim_5 ? "-5" : ""} \
+        ${params.trim_3 ? "-3" : ""} \
+        -M ${params.mean_quality} \
+        -q ${params.qualified_quality} \
+        -u ${params.unqualified_percent} \
+        -l ${params.min_length}
     """
 }
