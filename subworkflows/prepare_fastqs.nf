@@ -29,8 +29,8 @@ workflow prepare_fastqs {
     if (params.pod5_dir) {
         pod5_ch    = Channel.fromPath(params.pod5_dir)
         bc_out     = basecalling(pod5_ch)
-        demux_out  = demultiplexing(bc_out.out.basecalls)
-        bam_out    = bam2fastq(demux_out.out.demux_bams)
+        demux_out  = demultiplexing(bc_out.basecalls)
+        bam_out    = bam2fastq(demux_out.demux_bams)
 
         fastqs_ch = fastqs_ch.mix(bam_out.out.fastqs)
     }
