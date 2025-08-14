@@ -10,10 +10,10 @@ process basecalling {
     script:
     """
     dorado basecaller \
-        sup \
+        ${params.basecalling_model} \
         ${pod5_dir} \
-        --no-trim \
-        --kit-name SQK-NBD114-96 \
+        ${params.no_trim ? '--no-trim' : ''} \
+        --kit-name ${params.kit_name} \
         > basecalls.bam
     """
 }
