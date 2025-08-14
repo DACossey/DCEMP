@@ -1,6 +1,6 @@
 process bam2fastq {
 
-    tag { demux.getSimpleName() }
+    tag { demux.simpleName() }
     publishDir "fastqs",mode: 'copy'
 
     input:
@@ -11,7 +11,6 @@ process bam2fastq {
 
     script:
     """
-    mkdir -p fastqs
     samtools fastq --threads 20 -0 fastqs/${demux.simpleName}.fastq "$demux"
 
     """
