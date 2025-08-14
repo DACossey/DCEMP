@@ -14,7 +14,7 @@ process demultiplexing {
     
     dorado demux -t 20 \
         --output-dir demux_bams \
-        --kit-name SQK-NBD114-96 \
+        --kit-name ${params.kit_name} \
         ${basecalling}
   
     """
