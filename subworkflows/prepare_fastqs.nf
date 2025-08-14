@@ -10,9 +10,9 @@
     IMPORT MODULES
 ========================================================================================
 */
-include { basecalling }    from './modules/basecalling.nf'
-include { demultiplexing } from './modules/demultiplexing.nf'
-include { bam2fastq }      from './modules/bam2fastq.nf'
+include { basecalling }    from '../modules/basecalling.nf'
+include { demultiplexing } from '../modules/demultiplexing.nf'
+include { bam2fastq }      from '../modules/bam2fastq.nf'
 
 /*
 ========================================================================================
