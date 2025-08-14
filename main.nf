@@ -15,6 +15,8 @@ include { fastplong }         from './modules/fastplong.nf'
 */
 workflow {
 
-    fastqs_ch = prepare_fastqs()
+    prepare_out = prepare_fastqs()
+    fastqs_ch = prepare_out.fastqs_ch
+
     fastplong(fastqs_ch)
 }
