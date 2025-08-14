@@ -32,7 +32,7 @@ workflow prepare_fastqs {
         demux_out  = demultiplexing(bc_out.basecalls)
         bam_out    = bam2fastq(demux_out.demux_bams)
 
-        fastqs_ch = fastqs_ch.mix(bam_out.out.fastqs)
+        fastqs_ch = fastqs_ch.mix(bam_out.fastqs)
     }
 
     // BAM input
@@ -40,7 +40,7 @@ workflow prepare_fastqs {
         bam_ch    = Channel.fromPath(params.bam_files)
         bam_out   = bam2fastq(bam_ch)
 
-        fastqs_ch = fastqs_ch.mix(bam_out.out.fastqs)
+        fastqs_ch = fastqs_ch.mix(bam_out.fastqs)
     }
 
     // FASTQ input
