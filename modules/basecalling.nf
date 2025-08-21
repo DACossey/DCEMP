@@ -14,7 +14,7 @@ process basecalling {
         ${pod5_dir} \
         ${params.no_trim ? '--no-trim' : ''} \
         --kit-name ${params.kit_name} \
-        > basecalls.bam
+        > ./basecalls.bam
     """
 }
 
