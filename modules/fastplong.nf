@@ -7,8 +7,12 @@ process fastplong {
     // Send reports to qc_reports folder
     publishDir "${params.outdir}/qc_reports", mode: 'copy', pattern: "*.{html,json}"
 
+    //container
+    container 'community.wave.seqera.io/library/fastplong:0.3.0--7ac22bc1d1bce90c' //fastplong
+    
+
     input:
-    path fastq from fastqs_ch
+    path fastq
 
     output:
     path "*_trimmed.fastq", emit: trimmed_fastqs
