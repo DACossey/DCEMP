@@ -1,17 +1,20 @@
 process bam2fastq {
 
-    tag { demux.simpleName() }
+    // tag { demux.baseName }
     publishDir "fastqs",mode: 'copy'
 
     input:
     path demux //demultiplexing output
-
+    
+    // publishDir "fastqs", mode: 'copy'
+    
     output:
-    path "fastqs/${bam.simpleName}.fastq", emit: fastqs
+    path "${demux}.fastq", emit: fastqs
 
     script:
     """
-    samtools fastq --threads 20 -0 fastqs/${demux.simpleName}.fastq "$demux"
-
+    
+    samtools fastq --threads 20 -0 ${demux}.fastq $demux
     """
+
 }
