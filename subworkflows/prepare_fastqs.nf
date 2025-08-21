@@ -19,37 +19,32 @@ include { bam2fastq }      from '../modules/bam2fastq.nf'
     WORKFLOW
 ========================================================================================
 */
-
 workflow prepare_fastqs {
-
-    // initialize empty channel
     fastqs_ch = Channel.empty()
 
-    // POD5 input
     if (params.pod5_dir) {
-        pod5_ch    = Channel.fromPath(params.pod5_dir)
-        bc_out     = basecalling(pod5_ch)
-        demux_out  = demultiplexing(bc_out.basecalls)
-        bam_out    = bam2fastq(demux_out.demux_bams)
+        pod5_ch   = Channel.fromPath(params.pod5_dir, type: 'dir')
+        // pod5_ch.view()
+        bc_out    = basecalling(pod5_ch)
+        demux_out = demultiplexing(bc_out.basecalls)
+        bam_out   = bam2fastq(demux_out.demux_bams.flatten())
+        fastqs_ch = bam_out.fastqs
+        
 
-        fastqs_ch = fastqs_ch.mix(bam_out.fastqs)
     }
-
-    // BAM input
-    if (params.bam_files) {
-        bam_ch    = Channel.fromPath(params.bam_files)
+    else if (params.bam_files) {
+        bam_ch    = Channel.fromPath("${params.bam_files}/*.bam")
         bam_out   = bam2fastq(bam_ch)
-
-        fastqs_ch = fastqs_ch.mix(bam_out.fastqs)
+        fastqs_ch = bam_out.fastqs
+    }
+    else if (params.fastq_files) {
+        fastq_ch  = Channel.fromPath("${params.fastq_files}/*.fastq")
+        fastqs_ch = fastq_ch
+    }
+    else {
+        error "You must provide either --pod5_dir, --bam_files, or --fastq_files"
     }
 
-    // FASTQ input
-    if (params.fastq_files) {
-        fastq_ch  = Channel.fromPath(params.fastq_files)
-        fastqs_ch = fastqs_ch.mix(fastq_ch)
-    }
-
-    // emit the final channel
-    emit: fastqs_ch
+    emit:
+    fastqs_ch
 }
-
