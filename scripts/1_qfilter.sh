@@ -8,7 +8,7 @@ echo "You can also run fastplong -h for more information."
 echo "Remember to put flags before the input directory."
 
 
-# Set default options for flags (will be overwritten if specified)
+# Set default options for flags (will be overwritten if specified), note these adapters are specific for the ligation seq with pcr barcoding and wont be applicable to the native kit which won't even have regular adapters -each barcode is completely different.
 START_ADAPTER="TTTCTGTTGGTGCTGATATTGC"
 END_ADAPTER="ACTTGCCTGTCGCTCTATCTTC"
 TRIM_5=false
